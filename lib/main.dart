@@ -1,17 +1,28 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:quick_click/ui_builder.dart';
 import 'package:quick_click/utils/search.dart';
 import 'package:slide_drawer/slide_drawer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 final appTitleGradient = LinearGradient(colors: [
   Colors.white,
   Colors.grey.shade200,
 ]);
 
+dynamic initialJsonData = null;
+
 final uiBuilderKey = GlobalKey<UIBuilderWidgetState>();
 
-void main() {
+void main() async {
+  final response = await http.get(Uri.parse(
+      'https://raw.githubusercontent.com/omegaui/omegaui/main/git-card.json'));
+
+  if (response.statusCode == 200) {
+    initialJsonData = jsonDecode(response.body);
+  }
   runApp(const App());
 }
 
@@ -145,6 +156,19 @@ class _ContentPanelState extends State<ContentPanel> {
 
   @override
   Widget build(BuildContext context) {
+    if (initialJsonData == null) {
+      return Container(
+        child: Expanded(
+          child: Text(
+            "Internet is required to access remote git-card! Close the App, Connect to a network and Restart.",
+            style: TextStyle(
+              color: Colors.grey.shade700,
+              fontFamily: "UbuntuMono",
+            ),
+          ),
+        ),
+      );
+    }
     return LayoutBuilder(builder: (context, constraints) {
       return Container(
         decoration: BoxDecoration(
@@ -222,6 +246,7 @@ class _ContentPanelState extends State<ContentPanel> {
                     return UIBuilderWidget(
                       key: uiBuilderKey,
                       constraints: constraints,
+                      jsonData: initialJsonData,
                     );
                   }),
                 ),
