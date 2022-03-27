@@ -17,6 +17,10 @@
   </a>
 </p>
 
+<h1 align="center">
+  Contribute in building the Ultimate GitBook of Developers by creating your git-card.json
+</h1>
+
 # gitcards
 The Attractive and Interactive Variant of your GitHub profile.
 
