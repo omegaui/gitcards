@@ -88,6 +88,7 @@ class UIBuilderWidgetState extends State<UIBuilderWidget> {
         ),
         ProjectList(
           constraints: widget.constraints,
+          jsonData: jsonData,
           links: jsonData['projects']['links'],
         ),
         SizedBox(height: 10),

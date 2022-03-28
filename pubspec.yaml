@@ -47,6 +47,7 @@ dev_dependencies:
 
 flutter_icons:
   android: true
+  web: true
   image_path: "assets/android/gitcards-icon-512.png"
   adaptive_icon_foreground: "assets/android/gitcards-icon-512.png"
   adaptive_icon_background: "#ffffff"

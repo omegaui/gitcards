@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'github_api_calls.dart';
 
 class ProjectList extends StatelessWidget {
   final BoxConstraints constraints;
+  final jsonData;
   final links;
 
-  const ProjectList({Key? key, required this.constraints, required this.links})
+  const ProjectList(
+      {Key? key, required this.constraints, required this.jsonData, this.links})
       : super(key: key);
 
   @override
@@ -29,7 +32,10 @@ class ProjectList extends StatelessWidget {
           padding: const EdgeInsets.all(10.0),
           child: Column(
             children: ((links as List<dynamic>).map((linkData) {
-              return ProjectTile(constraints: constraints, linkData: linkData);
+              return ProjectTile(
+                  constraints: constraints,
+                  jsonData: jsonData,
+                  linkData: linkData);
             })).toList(),
           ),
         ),
@@ -39,12 +45,22 @@ class ProjectList extends StatelessWidget {
 }
 
 class ProjectTile extends StatelessWidget {
+  final jsonData;
   final linkData;
   final constraints;
 
   const ProjectTile(
-      {Key? key, required this.linkData, required this.constraints})
+      {Key? key,
+      required this.jsonData,
+      this.linkData,
+      required this.constraints})
       : super(key: key);
+
+  Future<String> computeStars() async {
+    return linkData['stars'] != "auto"
+        ? linkData['stars']
+        : getStarCount(jsonData['username'], linkData['title']);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,13 +98,19 @@ class ProjectTile extends StatelessWidget {
                       color: Colors.amber[800],
                       size: 15,
                     ),
-                    Text(
-                      linkData['stars'],
-                      style: TextStyle(
-                        fontFamily: "UbuntuMono",
-                        color: Colors.black,
-                      ),
-                    ),
+                    FutureBuilder(
+                        future: computeStars(),
+                        initialData: "...",
+                        builder:
+                            (BuildContext context, AsyncSnapshot<String> text) {
+                          return Text(
+                            text.data as String,
+                            style: TextStyle(
+                              fontFamily: "UbuntuMono",
+                              color: Colors.black,
+                            ),
+                          );
+                        }),
                   ],
                 ),
               ],
