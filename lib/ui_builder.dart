@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:quick_click/utils/connections.dart';
+import 'package:quick_click/utils/music.dart';
 import 'package:quick_click/utils/projects.dart';
 import 'package:quick_click/utils/some_lines.dart';
 import 'package:quick_click/utils/tools.dart';
@@ -95,6 +96,7 @@ class UIBuilderWidgetState extends State<UIBuilderWidget> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 jsonData['connect-title'],
@@ -111,6 +113,23 @@ class UIBuilderWidgetState extends State<UIBuilderWidget> {
           constraints: widget.constraints,
           jsonData: jsonData,
         ),
+        if (jsonData['show-music-playlist'] == "true")
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+            child: Column(
+              children: [
+                Text(
+                  jsonData['music-playlist-data']['title'],
+                  style: TextStyle(
+                    fontFamily: "Helvetica",
+                    color: Colors.grey[700],
+                    fontSize: 18,
+                  ),
+                ),
+                MusicPlaylist(jsonData: jsonData),
+              ],
+            ),
+          ),
         if (jsonData['show-lottie-animation'] == 'true')
           Lottie.network(
             jsonData['lottie-animation-url'],
